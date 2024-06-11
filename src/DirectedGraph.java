@@ -1,6 +1,16 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
-import java.io.*;
 
 class DirectedGraph {
     Map<String, Node> nodes;
@@ -50,14 +60,16 @@ class DirectedGraph {
         return bridgeWords;
     }
 
-    public String generateDOT() {
+    public String generateDot() {
         StringBuilder dotBuilder = new StringBuilder();
         dotBuilder.append("digraph G {\n");
         for (Node node : nodes.values()) {
             for (Map.Entry<Node, Integer> entry : node.edgeValues.entrySet()) {
                 Node neighbor = entry.getKey();
                 int weight = entry.getValue();
-                dotBuilder.append("\t\"").append(node.getName()).append("\" -> \"").append(neighbor.getName()).append("\" [label=\"").append(weight).append("\"];\n");
+                dotBuilder.append("\t\"").append(node.getName()).append("\" -> \"")
+                                .append(neighbor.getName()).append("\" [label=\"")
+                                    .append(weight).append("\"];\n");
             }
         }
         dotBuilder.append("}");
@@ -115,6 +127,7 @@ class DirectedGraph {
 
         return parentMap;
     }
+
     public static List<String> getPath(Map<String, String> parentMap, String src, String des) {
         LinkedList<String> path = new LinkedList<>();
         String currentNode = des;
@@ -132,7 +145,9 @@ class DirectedGraph {
             return Collections.emptyList();  // No valid path found
         }
     }
-    public static void modifyDotFile(String inputFilePath, String outputFilePath, List<String> paths) throws IOException {
+
+    public static void modifyDotFile(String inputFilePath, String outputFilePath,
+                                     List<String> paths) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath));
 
@@ -156,6 +171,7 @@ class DirectedGraph {
         reader.close();
         writer.close();
     }
+
     // 打印最短路径
     public String printShortestPath(String source, String destination, Map<String, String> parentMap) {
         List<String> path = new ArrayList<>();
@@ -175,11 +191,13 @@ class DirectedGraph {
         shortestPath += path.size() - 1;
         return shortestPath;
     }
-    public void RandomWalk(List<String> visitedNodes, StringBuilder currentNode) {
+
+    public void randomWalk(List<String> visitedNodes, StringBuilder currentNode) {
         if (!visitedNodes.contains(currentNode.toString())) {
             visitedNodes.add(currentNode.toString());
         }
     }
+
     public String printVisitedNodes(List<String> visitedNodes) {
         String result = new String();
         for (String node : visitedNodes) {
@@ -188,9 +206,11 @@ class DirectedGraph {
         }
         return result;
     }
+
     public List<String> getAllNodes() {
         return new ArrayList<>(nodes.keySet());
     }
+
     public Node getNode(String name) {
         return nodes.get(name);
     }

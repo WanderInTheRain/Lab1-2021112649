@@ -1,13 +1,21 @@
-import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
+/**
+ * A simple application to display an image using Swing.
+ */
 public class ImageDisplay extends JFrame {
     private JLabel label;
 
+    /**
+     * Constructs an ImageDisplay object and initializes the GUI.
+     */
     public ImageDisplay() {
         setTitle("Image Display");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,6 +36,11 @@ public class ImageDisplay extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * The main method to launch the application.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new ImageDisplay());
     }

@@ -10,9 +10,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class GUI {
     private JPanel mainWindow;
@@ -41,17 +38,17 @@ public class GUI {
                     e2.printStackTrace();
                 }
                 TextFileToDirectedGraph textToGraph = new TextFileToDirectedGraph();
-                graph = textToGraph.genarateGraph(fileContent);
+                graph = textToGraph.generateGraph(fileContent);
                 String dotpath = new String("resource/graph1.dot");
                 String pngpath = new String("resource/graph1.png");
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(dotpath))) {
-                    writer.write(graph.generateDOT());
+                    writer.write(graph.generateDot());
                     System.out.println("DOT file 'graph.dot' has been generated successfully.");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 DotToPng dotToPng = new DotToPng();
-                dotToPng.convet(dotpath,pngpath);
+                dotToPng.convert(dotpath,pngpath);
                 showgraph.setVisible(true);
                 try {
                     BufferedImage img = ImageIO.read(new File(pngpath));
@@ -102,17 +99,17 @@ public class GUI {
                 textArea1.setText(newword);
 
                 TextFileToDirectedGraph textToGraph = new TextFileToDirectedGraph();
-                DirectedGraph graph2 = textToGraph.genarateGraph(newword);
+                DirectedGraph graph2 = textToGraph.generateGraph(newword);
                 String dotpath = new String("resource/graph3.dot");
                 String pngpath = new String("resource/graph3.png");
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(dotpath))) {
-                    writer.write(graph2.generateDOT());
+                    writer.write(graph2.generateDot());
                     System.out.println("DOT file 'graph.dot' has been generated successfully.");
                 } catch (IOException e3) {
                     e3.printStackTrace();
                 }
                 DotToPng dotToPng = new DotToPng();
-                dotToPng.convet(dotpath,pngpath);
+                dotToPng.convert(dotpath,pngpath);
                 showgraph.setVisible(true);
                 try {
                     BufferedImage img = ImageIO.read(new File(pngpath));
@@ -147,7 +144,7 @@ public class GUI {
                     }
                     String pngpath = "resource/graph4.png";
                     DotToPng dotToPng = new DotToPng();
-                    dotToPng.convet(outputFilePath,pngpath);
+                    dotToPng.convert(outputFilePath,pngpath);
                     showgraph.setVisible(true);
                     try {
                         BufferedImage img = ImageIO.read(new File(pngpath));
@@ -203,7 +200,7 @@ public class GUI {
                                 run = false;
                                 break;
                             }
-                            graph.RandomWalk(visitedNodes, currentNode);
+                            graph.randomWalk(visitedNodes, currentNode);
                             try {
                                 TimeUnit.MILLISECONDS.sleep(500); // 0.5秒 = 500毫秒
                             } catch (InterruptedException e2) {

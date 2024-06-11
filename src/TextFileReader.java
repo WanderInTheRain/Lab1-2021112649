@@ -3,8 +3,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * A utility class for reading the content of a text file and printing it to the console.
+ */
 public class TextFileReader {
 
+    /**
+     * The main method that initiates the reading of a text file and prints its content.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         // 请替换为你要读取的文件路径
         String filePath = "your_file_path.txt";
@@ -19,11 +27,11 @@ public class TextFileReader {
     }
 
     /**
-     * 从指定路径读取文件内容并返回字符串
+     * Reads the content of a file from the specified path and returns it as a string.
      *
-     * @param filePath 文件路径
-     * @return 文件内容字符串
-     * @throws IOException 如果读取文件时发生错误
+     * @param filePath the path to the file
+     * @return the content of the file as a string
+     * @throws IOException if an I/O error occurs while reading the file
      */
     public static String read(String filePath) throws IOException {
         // 创建File对象
