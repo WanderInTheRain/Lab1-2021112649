@@ -1,8 +1,11 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +17,7 @@ import java.util.Random;
 
 class DirectedGraph {
     Map<String, Node> nodes;
+    Random random = new Random();
 
     public DirectedGraph() {
         this.nodes = new HashMap<>();
@@ -64,7 +68,7 @@ class DirectedGraph {
         StringBuilder dotBuilder = new StringBuilder();
         dotBuilder.append("digraph G {\n");
         for (Node node : nodes.values()) {
-            for (Map.Entry<Node, Integer> entry : node.edgeValues.entrySet()) {
+            for (Map.Entry<Node, Integer> entry : node.getEdgeValues().entrySet()) {
                 Node neighbor = entry.getKey();
                 int weight = entry.getValue();
                 dotBuilder.append("\t\"").append(node.getName()).append("\" -> \"")
@@ -88,7 +92,6 @@ class DirectedGraph {
             result.append(word1);
             if (!bridgeWords.isEmpty()) {
                 // 插入第一个桥接词
-                Random random = new Random();
                 int randomIndex = random.nextInt(bridgeWords.size());
 
                 // Insert the randomly selected bridge word into the result
@@ -108,7 +111,9 @@ class DirectedGraph {
         Queue<String> queue = new LinkedList<>(); // 用于广度优先搜索
 
         parentMap.put(source, null); // 源节点的直接前驱节点为null
-        queue.offer(source); // 将源节点加入队列
+        if (!queue.offer(source)) {
+            throw new IllegalStateException("Queue is full");
+        }
 
         while (!queue.isEmpty()) {
             String current = queue.poll(); // 出队列
@@ -119,7 +124,9 @@ class DirectedGraph {
                     String neighborName = neighbor.getName();
                     if (!parentMap.containsKey(neighborName)) { // 如果邻居节点未被访问过
                         parentMap.put(neighborName, current); // 记录直接前驱节点
-                        queue.offer(neighborName); // 入队列
+                        if (!queue.offer(neighborName)) {
+                            throw new IllegalStateException("Queue is full");
+                        }
                     }
                 }
             }
@@ -148,28 +155,32 @@ class DirectedGraph {
 
     public static void modifyDotFile(String inputFilePath, String outputFilePath,
                                      List<String> paths) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(inputFilePath), StandardCharsets.UTF_8));
+             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                     new FileOutputStream(outputFilePath), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Check if the line contains an edge definition
+                if (line.contains("->")) {
+                    String[] parts = line.split("->");
+                    String from = parts[0].trim().replace("\"", "");
+                    String to = parts[1].split("\\[")[0].trim().replace("\"", "");
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-            // Check if the line contains an edge definition
-            if (line.contains("->")) {
-                String[] parts = line.split("->");
-                String from = parts[0].trim().replace("\"", "");
-                String to = parts[1].split("\\[")[0].trim().replace("\"", "");
-
-                // Check if the edge is in
-                if (paths.contains(from) && paths.indexOf(from) + 1 < paths.size() && paths.get(paths.indexOf(from) + 1).equals(to)) {
-                    line = line.replace("];", ", color=\"blue\"];");
+                    // Check if the edge is in
+                    if (paths.contains(from) && paths.indexOf(from) + 1 < paths.size() && paths.get(paths.indexOf(from) + 1).equals(to)) {
+                        line = line.replace("];", ", color=\"blue\"];");
+                    }
                 }
+                writer.write(line);
+                writer.newLine();
             }
-            writer.write(line);
-            writer.newLine();
+            reader.close();
+            writer.close();
+        } catch (IOException e) {
+        // 处理IOException
+        System.err.println("处理文件时发生错误: " + e.getMessage());
         }
-
-        reader.close();
-        writer.close();
     }
 
     // 打印最短路径
@@ -183,9 +194,11 @@ class DirectedGraph {
         path.add(0, source);
 
         String shortestPath = "Shortest path from " + source + " to " + destination + ":\n";
+        StringBuilder buffer = new StringBuilder(shortestPath);
         for (String node : path) {
-            shortestPath += node + " ";
+            buffer.append(node).append(" ");
         }
+        shortestPath = buffer.toString();
         shortestPath += "\n";
         shortestPath += "len is ";
         shortestPath += path.size() - 1;
@@ -199,7 +212,7 @@ class DirectedGraph {
     }
 
     public String printVisitedNodes(List<String> visitedNodes) {
-        String result = new String();
+        String result = "";
         for (String node : visitedNodes) {
             result += node;
             result += " ";

@@ -6,7 +6,7 @@ import java.util.Map;
 class Node {
     String name;
     List<Node> neighbors;
-    public Map<Node, Integer> edgeValues;
+    private Map<Node, Integer> edgeValues;
 
     public Node(String name) {
         this.name = name;
@@ -29,5 +29,9 @@ class Node {
 
     public List<Node> getNeighbors() {
         return neighbors;
+    }
+
+    public Map<Node, Integer> getEdgeValues() {
+        return edgeValues;
     }
 }

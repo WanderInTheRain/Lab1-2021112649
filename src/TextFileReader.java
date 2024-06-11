@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A utility class for reading the content of a text file and printing it to the console.
@@ -41,7 +42,7 @@ public class TextFileReader {
         StringBuilder fileContent = new StringBuilder();
 
         // 创建FileReader和BufferedReader对象
-        try (FileReader fileReader = new FileReader(file);
+        try (FileReader fileReader = new FileReader(file, StandardCharsets.UTF_8);
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 
             String line;

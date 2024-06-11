@@ -10,45 +10,45 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
+import java.nio.charset.StandardCharsets;
 
 public class Gui {
     private JPanel mainWindow;
     private JButton req1;
     private JButton shortestPathbutton;
-    private JButton BridgeInsertbutton;
+    private JButton bridgeInsertbutton;
     private JButton getbrigebutton;
-    private JButton Walkbutton;
+    private JButton walkbutton;
     private JTextArea textArea1;
     private JPanel showgraph;
     private JLabel label;
     DirectedGraph graph;
     boolean run = true;
+    Random random = new Random();
 
     public Gui() {
         req1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e1) {
                 String filePath = JOptionPane.showInputDialog("Enter file path:");
-                TextFileReader reader = new TextFileReader();
-                String fileContent = new String();
+                String fileContent = "";
                 try {
-                    fileContent = reader.read(filePath);
+                    fileContent = TextFileReader.read(filePath);
                     System.out.println(fileContent);
                 } catch (IOException e2) {
                     e2.printStackTrace();
                 }
                 TextFileToDirectedGraph textToGraph = new TextFileToDirectedGraph();
                 graph = textToGraph.generateGraph(fileContent);
-                String dotpath = new String("resource/graph1.dot");
-                String pngpath = new String("resource/graph1.png");
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(dotpath))) {
+                String dotpath = "resource/graph1.dot";
+                String pngpath = "resource/graph1.png";
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(dotpath, StandardCharsets.UTF_8))) {
                     writer.write(graph.generateDot());
                     System.out.println("DOT file 'graph.dot' has been generated successfully.");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                DotToPng dotToPng = new DotToPng();
-                dotToPng.convert(dotpath,pngpath);
+                DotToPng.convert(dotpath,pngpath);
                 showgraph.setVisible(true);
                 try {
                     BufferedImage img = ImageIO.read(new File(pngpath));
@@ -93,7 +93,7 @@ public class Gui {
                 }
             }
         });
-        BridgeInsertbutton.addActionListener(new ActionListener() {
+        bridgeInsertbutton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String word = JOptionPane.showInputDialog("Enter text to insert bridge:");
@@ -102,16 +102,15 @@ public class Gui {
 
                 TextFileToDirectedGraph textToGraph = new TextFileToDirectedGraph();
                 DirectedGraph graph2 = textToGraph.generateGraph(newword);
-                String dotpath = new String("resource/graph3.dot");
-                String pngpath = new String("resource/graph3.png");
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(dotpath))) {
-                    writer.write(graph2.generateDot());
+                String dotpath = "resource/graph3.dot";
+                String pngpath = "resource/graph3.png";
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(dotpath, StandardCharsets.UTF_8))){
+                writer.write(graph2.generateDot());
                     System.out.println("DOT file 'graph.dot' has been generated successfully.");
                 } catch (IOException e3) {
                     e3.printStackTrace();
                 }
-                DotToPng dotToPng = new DotToPng();
-                dotToPng.convert(dotpath,pngpath);
+                DotToPng.convert(dotpath,pngpath);
                 showgraph.setVisible(true);
                 try {
                     BufferedImage img = ImageIO.read(new File(pngpath));
@@ -145,8 +144,7 @@ public class Gui {
                         e12.printStackTrace();
                     }
                     String pngpath = "resource/graph4.png";
-                    DotToPng dotToPng = new DotToPng();
-                    dotToPng.convert(outputFilePath,pngpath);
+                    DotToPng.convert(outputFilePath,pngpath);
                     showgraph.setVisible(true);
                     try {
                         BufferedImage img = ImageIO.read(new File(pngpath));
@@ -160,7 +158,7 @@ public class Gui {
                 else if (tokens.length == 1){
                     Map<String, String> parentMap = graph.findShortestPath(tokens[0]);
                     List<String> allNodes = graph.getAllNodes();
-                    String ans = new String();
+                    String ans = "";
                     for (String node : allNodes) {
                         List<String> paths = graph.getPath(parentMap,tokens[0], node);
                         if (paths.isEmpty()){
@@ -175,11 +173,11 @@ public class Gui {
                 }
             }
         });
-        Walkbutton.addActionListener(new ActionListener() {
+        walkbutton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (Walkbutton.getText().equals("RandomWalk")) {
-                    Walkbutton.setText("Stop");
+                if (walkbutton.getText().equals("RandomWalk")) {
+                    walkbutton.setText("Stop");
                     run = true; // 开始随机游走
                     new Thread(() -> {
                         List<String> allNodes = graph.getAllNodes();
@@ -188,7 +186,6 @@ public class Gui {
                             return;
                         }
 
-                        Random random = new Random();
                         String startNode = allNodes.get(random.nextInt(allNodes.size()));
                         System.out.println("Starting random walk from node: " + startNode);
 
@@ -213,22 +210,22 @@ public class Gui {
                                 System.out.println("No more outgoing edges from node: " + currentNode);
                                 run = false;
                             } else {
-                                Node nextNode = neighbors.get(new Random().nextInt(neighbors.size()));
+                                Node nextNode = neighbors.get(random.nextInt(neighbors.size()));
                                 String edge = currentNode + "->" + nextNode.getName();
                                 currentNode = new StringBuilder(nextNode.getName());
                             }
                         }
                         String content = graph.printVisitedNodes(visitedNodes);
                         textArea1.setText(content);
-                        try (BufferedWriter writer = new BufferedWriter(new FileWriter("resource/out.txt"))) {
+                        try (BufferedWriter writer = new BufferedWriter(new FileWriter("resource/out.txt", StandardCharsets.UTF_8))) {
                             writer.write(content);
                         } catch (IOException e23) {
                             e23.printStackTrace();
                         }
-                        Walkbutton.setText("RandomWalk");
+                        walkbutton.setText("RandomWalk");
                     }).start();
                 } else {
-                    Walkbutton.setText("RandomWalk");
+                    walkbutton.setText("RandomWalk");
                     run = false;
                 }
             }
@@ -236,11 +233,13 @@ public class Gui {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("GUI");
-        frame.setContentPane(new Gui().mainWindow);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,600);
-        frame.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("GUI");
+            frame.setContentPane(new Gui().mainWindow);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800,600);
+            frame.setVisible(true);
+        });
     }
 
 }
