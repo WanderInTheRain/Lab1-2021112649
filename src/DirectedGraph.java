@@ -9,8 +9,8 @@ class DirectedGraph {
         this.nodes = new HashMap<>();
     }
 
-    public void addNode(String source) {
-        nodes.computeIfAbsent(source, Node::new);
+    public void addNode(String label) {
+        nodes.computeIfAbsent(label, Node::new);
     }
 
     public void addEdge(String source, String destination) {
