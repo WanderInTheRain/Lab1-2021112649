@@ -1,0 +1,9 @@
+digraph G {
+	"over" -> "the" [label="1"];
+	"the" -> "quick" [label="1"];
+	"the" -> "fox" [label="1", color="blue"];
+	"quick" -> "brown" [label="1"];
+	"jumps" -> "over" [label="1", color="blue"];
+	"brown" -> "fox" [label="1"];
+	"fox" -> "jumps" [label="1", color="blue"];
+}

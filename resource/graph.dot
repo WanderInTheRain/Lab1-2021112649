@@ -1,0 +1,13 @@
+digraph G {
+	"new" -> "worlds";
+	"new" -> "life";
+	"new" -> "civilizations";
+	"explore" -> "strange";
+	"and" -> "new";
+	"To" -> "explore";
+	"To" -> "seek";
+	"seek" -> "out";
+	"life" -> "and";
+	"strange" -> "new";
+	"out" -> "new";
+}

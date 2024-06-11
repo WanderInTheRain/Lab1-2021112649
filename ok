@@ -1,0 +1,1 @@
+To explore strange new worlds,To seek out new life and new civilizations ok w y ok x y

@@ -1,0 +1,4 @@
+digraph G {
+	"future" -> "now" [label="1"];
+	"hello" -> "future" [label="1"];
+}

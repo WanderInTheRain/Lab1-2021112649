@@ -1,0 +1,4 @@
+digraph G {
+	"quick" -> "brown" [label="1"];
+	"brown" -> "fox" [label="1"];
+}

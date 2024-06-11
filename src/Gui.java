@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
 
-public class GUI {
+public class Gui {
     private JPanel mainWindow;
     private JButton req1;
     private JButton shortestPathbutton;
@@ -24,7 +24,7 @@ public class GUI {
     DirectedGraph graph;
     boolean run = true;
 
-    public GUI() {
+    public Gui() {
         req1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e1) {
@@ -66,7 +66,8 @@ public class GUI {
                 String query = JOptionPane.showInputDialog("Enter 2 words, such as \"x,y\":");
                 String[] tokens = query.split(",");
                 if (tokens.length != 2) {
-                    JOptionPane.showMessageDialog(null, "Please enter exactly two words separated by a comma.");
+                    JOptionPane.showMessageDialog(null,
+                            "Please enter exactly two words separated by a comma.");
                     return;
                 }
 
@@ -86,7 +87,8 @@ public class GUI {
                     textArea1.setText("No bridge words from " + word1 + " to " + word2 + "!");
                 } else {
                     String bridgeWordText = bridgeWords.stream()
-                            .collect(Collectors.joining(", ", "The bridge words from " + word1 + " to " + word2 + " are: ", "."));
+                            .collect(Collectors.joining(", ", "The bridge words from " +
+                                    word1 + " to " + word2 + " are: ", "."));
                     textArea1.setText(bridgeWordText);
                 }
             }
@@ -235,7 +237,7 @@ public class GUI {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("GUI");
-        frame.setContentPane(new GUI().mainWindow);
+        frame.setContentPane(new Gui().mainWindow);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800,600);
         frame.setVisible(true);
