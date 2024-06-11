@@ -128,4 +128,32 @@ public class DirectedGraphBlackTest {
         result = graph.getBridgeWords("B", "D");
         assertEquals(expected, result);
     }
+
+    @Test
+    public void testGraphSourceIsEmpty() {
+        DirectedGraph graph = new DirectedGraph();
+        graph.addNode("");
+        graph.addNode("B");
+        graph.addNode("C");
+        graph.addEdge("", "B");
+        graph.addEdge("B", "C");
+
+        List<String> expected = Arrays.asList("B");
+        List<String> result = graph.getBridgeWords("", "C");
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testGraphDestinationIsEmpty() {
+        DirectedGraph graph = new DirectedGraph();
+        graph.addNode("A");
+        graph.addNode("B");
+        graph.addNode("");
+        graph.addEdge("A", "B");
+        graph.addEdge("B", "");
+
+        List<String> expected = Arrays.asList("B");
+        List<String> result = graph.getBridgeWords("A", "");
+        assertEquals(expected, result);
+    }
 }

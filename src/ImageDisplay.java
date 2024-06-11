@@ -11,37 +11,38 @@ import javax.swing.SwingUtilities;
  * A simple application to display an image using Swing.
  */
 public class ImageDisplay extends JFrame {
-    private JLabel label;
 
-    /**
-     * Constructs an ImageDisplay object and initializes the GUI.
-     */
-    public ImageDisplay() {
-        setTitle("Image Display");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+  private JLabel label;
 
-        label = new JLabel();
-        add(label);
+  /**
+   * Constructs an ImageDisplay object and initializes the GUI.
+   */
+  public ImageDisplay() {
+    setTitle("Image Display");
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setSize(400, 300);
 
-        // Load and display the image
-        try {
-            BufferedImage img = ImageIO.read(new File("resource/graph1.png"));
-            ImageIcon icon = new ImageIcon(img);
-            label.setIcon(icon);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    label = new JLabel();
+    add(label);
 
-        setVisible(true);
+    // Load and display the image
+    try {
+      BufferedImage img = ImageIO.read(new File("resource/graph1.png"));
+      ImageIcon icon = new ImageIcon(img);
+      label.setIcon(icon);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
 
-    /**
-     * The main method to launch the application.
-     *
-     * @param args command-line arguments (not used)
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ImageDisplay());
-    }
+    setVisible(true);
+  }
+
+  /**
+   * The main method to launch the application.
+   *
+   * @param args command-line arguments (not used)
+   */
+  public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -> new ImageDisplay());
+  }
 }
